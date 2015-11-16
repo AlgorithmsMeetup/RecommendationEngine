@@ -31,7 +31,7 @@ function recommendationsFor(user, users) {
 }
 
 // You're welcome to use this but you don't have to: [1,2,3].contains(2) -> true
-Object.defineProperty(Array.prototype, 'contains', {
+Object.defineProperty(Array.prototype, 'includes', {
   value: function (primitive) {
     return this.indexOf(primitive) !== -1 // <- Nobody wants to read that!
   },
