@@ -1,10 +1,3 @@
-Object.defineProperty(Array.prototype, 'contains', {
-  value: function (primitive) {
-    return this.indexOf(primitive) !== -1 // <- Nobody wants to read that!
-  },
-  enumerable: false // Looking at object's keys will NOT include this property.
-});
-
 function u (list1, list2) {
   return list1.concat(list2).reduce(function(union, item){
     return list1.contains(item) && list2.contains(item) && !union.contains(item) ? union.concat(item) : union
@@ -100,3 +93,11 @@ function recommendationsFor(user, users) {
   // return array of itemIds ordered by greatest probabilityOfLike first
   return recommendations
 }
+
+// You're welcome to use this but you don't have to: [1,2,3].contains(2) -> true
+Object.defineProperty(Array.prototype, 'contains', {
+  value: function (primitive) {
+    return this.indexOf(primitive) !== -1 // <- Nobody wants to read that!
+  },
+  enumerable: false // Looking at object's keys will NOT include this property.
+});
