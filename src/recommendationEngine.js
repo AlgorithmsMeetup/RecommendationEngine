@@ -1,6 +1,9 @@
-Array.prototype.contains = function (primitive) {
-  return this.indexOf(primitive) !== -1 // <- Nobody wants to read that!
-}
+Object.defineProperty(Array.prototype, 'contains', {
+  value: function (primitive) {
+    return this.indexOf(primitive) !== -1 // <- Nobody wants to read that!
+  },
+  enumerable: false // Looking at object's keys will NOT include this property.
+});
 
 function u (list1, list2) {
   return list1.concat(list2).reduce(function(union, item){
@@ -69,7 +72,6 @@ function predictLike (itemId, user, users) {
 }
 
 function recommendationsFor(user, users) {
-  // calculate all items for
   var allItemIds = users.reduce(getItemIds, [])
   function getItemIds (itemIds, user) {
     return user.likes.concat(user.dislikes).reduce(aggregateUnique, itemIds)
