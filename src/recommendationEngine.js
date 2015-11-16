@@ -1,12 +1,12 @@
 function u (list1, list2) {
   return list1.concat(list2).reduce(function(union, item){
-    return list1.contains(item) && list2.contains(item) && !union.contains(item) ? union.concat(item) : union
+    return list1.includes(item) && list2.includes(item) && !union.includes(item) ? union.concat(item) : union
   }, [])
 }
 
 function n (list1, list2) {
   return list1.concat(list2).reduce(function(intersection, item){
-    return (!list1.contains(item) || !list2.contains(item)) && !intersection.contains(item) ? intersection.concat(item) : intersection
+    return (!list1.includes(item) || !list2.includes(item)) && !intersection.includes(item) ? intersection.concat(item) : intersection
   }, [])
 }
 
@@ -40,7 +40,7 @@ function predictLike (itemId, user, users) {
 
   function whoLikes (itemId) {
     return function (user) {
-      return user.likes.contains(itemId)
+      return user.likes.includes(itemId)
     }
   }
 
@@ -54,7 +54,7 @@ function predictLike (itemId, user, users) {
 
   function whoDislikes (itemId) {
     return function (user) {
-      return user.dislikes.contains(itemId)
+      return user.dislikes.includes(itemId)
     }
   }
 
@@ -70,12 +70,12 @@ function recommendationsFor(user, users) {
     return user.likes.concat(user.dislikes).reduce(aggregateUnique, itemIds)
   }
   function aggregateUnique (array, element) {
-    return array.contains(element) ? array : array.concat(element)
+    return array.includes(element) ? array : array.concat(element)
   }
 
   var unratedItemIds = allItemIds.filter(userHasNotRated)
   function userHasNotRated (itemId) {
-    return !user.likes.concat(user.dislikes).contains(itemId)
+    return !user.likes.concat(user.dislikes).includes(itemId)
   }
 
   var predictions = unratedItemIds.map(function(itemId){
@@ -94,8 +94,8 @@ function recommendationsFor(user, users) {
   return recommendations
 }
 
-// You're welcome to use this but you don't have to: [1,2,3].contains(2) -> true
-Object.defineProperty(Array.prototype, 'contains', {
+// You're welcome to use this but you don't have to: [1,2,3].includes(2) -> true
+Object.defineProperty(Array.prototype, 'includes', {
   value: function (primitive) {
     return this.indexOf(primitive) !== -1 // <- Nobody wants to read that!
   },
