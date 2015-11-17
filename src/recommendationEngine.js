@@ -1,31 +1,31 @@
-function u (list1, list2) {
-  return list1.concat(list2).reduce(function(union, item){
-    return list1.includes(item) && list2.includes(item) && !union.includes(item) ? union.concat(item) : union
+function intersection (list1, list2) {
+  return list1.concat(list2).reduce(function (results, item) {
+    return list1.includes(item) && list2.includes(item) && !results.includes(item) ? results.concat(item) : results
   }, [])
 }
 
-function n (list1, list2) {
-  return list1.concat(list2).reduce(function(intersection, item){
-    return (!list1.includes(item) || !list2.includes(item)) && !intersection.includes(item) ? intersection.concat(item) : intersection
+function symmetricDifference (list1, list2) {
+  return list1.concat(list2).reduce(function (results, item) {
+    return (!list1.includes(item) || !list2.includes(item)) && !results.includes(item) ? results.concat(item) : results
   }, [])
 }
 
-function jaccardIndex (list1, list2) {  // union over total
+function jaccardIndex (list1, list2) {  // intersection over total
   if (list1.length === 0 && list2.length === 0) { return 0 }
-  var union = u(list1, list2)
-  var intersection = n(list1, list2)
-  return union.length / (union.length + intersection.length)
+  var intersect = intersection(list1, list2)
+  var diff = symmetricDifference(list1, list2)
+  return intersect.length / (intersect.length + diff.length)
 }
 
 function calculateAgreement (user1, user2) { // agreements over total
-  var agreements = u(user1.likes, user2.likes).length + u(user1.dislikes, user2.dislikes).length
-  var total = agreements + n(user1.likes, user2.likes).length + n(user1.dislikes, user2.dislikes).length
+  var agreements = intersection(user1.likes, user2.likes).length + intersection(user1.dislikes, user2.dislikes).length
+  var total = agreements + symmetricDifference(user1.likes, user2.likes).length + symmetricDifference(user1.dislikes, user2.dislikes).length
   return agreements / total
 }
 
 function calculateDisagreement (user1, user2) { // disagreement over total
-  var disagreements = u(user1.likes, user2.dislikes).length + u(user1.dislikes, user2.likes).length
-  var total = disagreements + n(user1.likes, user2.dislikes).length + n(user1.dislikes, user2.likes).length
+  var disagreements = intersection(user1.likes, user2.dislikes).length + intersection(user1.dislikes, user2.likes).length
+  var total = disagreements + symmetricDifference(user1.likes, user2.dislikes).length + symmetricDifference(user1.dislikes, user2.likes).length
   return disagreements / total
 }
 
@@ -34,7 +34,7 @@ function calculateSimilarity (user1, user2) { // agreements - disagreements over
 }
 
 function predictLike (itemId, user, users) {
-  var usersExceptUser = n(users, [user])
+  var usersExceptUser = symmetricDifference(users, [user])
   var usersWhoLikesItem = usersExceptUser.filter(whoLikes(itemId))
   var sumSimilarityWithLikers = usersWhoLikesItem.reduce(sumWith(calculateSimilarity), 0.0)
 
@@ -78,11 +78,11 @@ function recommendationsFor(user, users) {
     return !user.likes.concat(user.dislikes).includes(itemId)
   }
 
-  var predictions = unratedItemIds.map(function(itemId){
+  var predictions = unratedItemIds.map(function (itemId) {
     return {id: itemId, predictedRating: predictLike(itemId, user, users)}
   })
 
-  var sortedPredictions = predictions.sort(function(a, b){
+  var sortedPredictions = predictions.sort(function (a, b) {
     return a.predictedRating < b.predictedRating
   })
 
