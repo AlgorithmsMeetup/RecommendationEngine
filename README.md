@@ -13,18 +13,21 @@ A simple recommendation engine has four parts:
 Our program is based on the **assumption** that users have similar preferences, i.e. one user liking an item means similar users will probably like that item too.
 
 ## Concepts
-To determine which users are similar, it's helpful to think about the union and intersection of preference sets.
+To determine which users are similar, it's helpful to think about the intersection and symmetric difference of preference sets.
 
 ### Sets
-**union**: *the set comprised of items that appear in both input sets.* 
-E.g. `[1,2,3] u [1,3,4] -> [1,3]`
+**intersection**: *the set comprised of items that appear in both input sets.*  
+E.g. `[1,2,3] n [1,3,4] -> [1,3]`  
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Venn0001.svg/440px-Venn0001.svg.png)
 
-**intersection**: *the set comprised of items that appear in only one of the input sets.* 
-E.g. `[1,2,3] n [1,3,5] -> [2,5]`
+**symmetric difference**: *the set comprised of items that appear in only one of the input sets.*  
+E.g. `[1,2,3] ∆ [1,3,5] -> [2,5]`  
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Venn0110.svg/440px-Venn0110.svg.png)
 
 ### Similarity
-**Similarity**: *A user is similar if they have more in common than not.* 
-We can represent this by looking at the number of elements in the union of two users' preferences over the total items those users have rated, or `A u B / A + B`
+**Similarity**: *A user is similar if they have more in common than not.*
+We can represent this by looking at the number of elements in the intersection of two users' preferences over the total items those users have rated, or  
+`A n B / A u B`
 
 A more advanced concept is that users who disagree about an item (e.g. a likes 1, b *dis*likes 1) are more dissimilar than those who do not (e.g. a likes 1, b likes 2).
 
